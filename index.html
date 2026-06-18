@@ -3,45 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BrowserBot Checker - PII Masking</title>
+  <title>BrowserBot Checker - PII Protection Suite</title>
   <meta name="author" content="Founder Bilal - nexagaze">
   <meta name="keywords" content="PII redaction, PII masking, credit card detection, SSN redactor, regex detection, nexagaze, bilal, AI, open source, behavior tracking">
   <link rel="icon" href="data:,">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
-    body { background: #0f172a; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
-    .container { background: #1e293b; padding: 2rem; border-radius: 16px; width: 640px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-    h2 { color: #38bdf8; text-align: center; margin-bottom: 0.25rem; }
-    .subtitle { text-align: center; color: #64748b; font-size: 0.85rem; margin-bottom: 1.25rem; }
-    label { color: #94a3b8; font-size: 0.85rem; display: block; margin-bottom: 0.4rem; }
-    textarea { width: 100%; height: 140px; padding: 0.75rem; border: 1px solid #334155; border-radius: 8px; background: #0f172a; color: #e2e8f0; font-size: 0.9rem; resize: vertical; outline: none; }
-    textarea:focus { border-color: #38bdf8; }
+    body { background: #ffffff; color: #1a1a1a; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem; }
+    .hero { text-align: center; margin-bottom: 2rem; max-width: 640px; width: 100%; }
+    .hero h1 { font-size: 2rem; color: #16a34a; margin-bottom: 0.5rem; }
+    .hero .subtitle { color: #6b7280; font-size: 1rem; margin-bottom: 0.25rem; }
+    .hero .badge-row { display: flex; justify-content: center; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+    .hero .badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .features { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; justify-content: center; max-width: 640px; width: 100%; }
+    .feature-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem; flex: 1; min-width: 160px; text-align: center; }
+    .feature-card .icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
+    .feature-card h4 { color: #16a34a; font-size: 0.85rem; margin-bottom: 0.2rem; }
+    .feature-card p { color: #6b7280; font-size: 0.75rem; }
+    .container { background: #f9fafb; padding: 2rem; border-radius: 16px; width: 640px; max-width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #e5e7eb; }
+    h2 { color: #16a34a; text-align: center; margin-bottom: 0.25rem; }
+    .subtitle-text { text-align: center; color: #6b7280; font-size: 0.85rem; margin-bottom: 1.25rem; }
+    label { color: #4b5563; font-size: 0.85rem; display: block; margin-bottom: 0.4rem; }
+    textarea { width: 100%; height: 140px; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; color: #1a1a1a; font-size: 0.9rem; resize: vertical; outline: none; }
+    textarea:focus { border-color: #22c55e; }
     .actions { display: flex; gap: 0.5rem; margin: 0.75rem 0; }
     .actions button { padding: 0.6rem 1.2rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-    #maskBtn { background: #38bdf8; color: #0f172a; flex: 1; }
-    #maskBtn:hover { background: #0ea5e9; }
+    #maskBtn { background: #22c55e; color: #ffffff; flex: 1; }
+    #maskBtn:hover { background: #16a34a; }
     #maskBtn:disabled { opacity: 0.5; cursor: not-allowed; }
-    #clearBtn { background: #334155; color: #94a3b8; }
-    #clearBtn:hover { background: #475569; }
-    #copyBtn { background: #334155; color: #94a3b8; }
-    #copyBtn:hover { background: #475569; }
-    .demo-btn.pass { background: #14532d; color: #4ade80; }
-    .demo-btn.pass:hover { background: #166534; }
-    .demo-btn.fail { background: #450a0a; color: #f87171; }
-    .demo-btn.fail:hover { background: #7f1d1d; }
+    #clearBtn { background: #e5e7eb; color: #4b5563; }
+    #clearBtn:hover { background: #d1d5db; }
+    #copyBtn { background: #e5e7eb; color: #4b5563; }
+    #copyBtn:hover { background: #d1d5db; }
+    .demo-btn.pass { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .demo-btn.pass:hover { background: #dcfce7; }
+    .demo-btn.fail { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
+    .demo-btn.fail:hover { background: #fee2e2; }
     .result-area { margin-top: 0.75rem; }
-    .result-area textarea { height: 140px; background: #0f172a; }
-    .summary { margin-top: 0.5rem; padding: 0.6rem 0.8rem; background: #0f172a; border-radius: 8px; color: #94a3b8; font-size: 0.8rem; word-wrap: break-word; min-height: 2rem; }
+    .result-area textarea { height: 140px; background: #ffffff; }
+    .summary { margin-top: 0.5rem; padding: 0.6rem 0.8rem; background: #f9fafb; border-radius: 8px; color: #4b5563; font-size: 0.8rem; word-wrap: break-word; min-height: 2rem; border: 1px solid #e5e7eb; }
     .action-badge { text-align: center; margin-top: 0.5rem; font-weight: 700; font-size: 1.1rem; min-height: 1.6rem; }
     .action-badge.rejected { color: #ef4444; }
-    .action-badge.passed { color: #22c55e; }
-    .status { text-align: center; color: #94a3b8; font-size: 0.8rem; margin-top: 1rem; }
+    .action-badge.passed { color: #16a34a; }
+    .status { text-align: center; color: #6b7280; font-size: 0.8rem; margin-top: 1rem; }
+    .footer { text-align: center; padding: 1rem; color: #9ca3af; font-size: 0.75rem; border-top: 1px solid #e5e7eb; margin-top: 1.5rem; max-width: 640px; width: 100%; }
+    .footer a { color: #22c55e; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    @keyframes fadeInUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-15px); } }
+    .fade-in { opacity:0; transform:translateY(30px); transition:all 0.6s ease-out; }
+    .fade-in.visible { opacity:1; transform:translateY(0); }
+    .float { animation: float 3s ease-in-out infinite; }
+    .nav { animation: navslide 0.6s ease-out 0.2s both; }
+    @keyframes navslide { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>BrowserBot Checker</h2>
-    <p class="subtitle">PII Masking Proxy — Local AI + Regex</p>
+<style>
+#nexasplash {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: #ffffff; z-index: 99999;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  animation: nexafade 0.6s ease-out 1.5s forwards;
+}
+#nexasplash .nx-logo {
+  font-size: 48px; font-weight: 900; color: #ea580c;
+  letter-spacing: 3px; font-family: system-ui, -apple-system, sans-serif;
+  animation: nxpop 0.5s ease-out;
+}
+#nexasplash .nx-sub {
+  font-size: 13px; color: #9ca3af; margin-top: 8px;
+  letter-spacing: 5px; text-transform: uppercase;
+}
+@keyframes nexafade { to { opacity: 0; pointer-events: none; } }
+@keyframes nxpop { 0% { opacity: 0; transform: scale(0.5); } 70% { transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
+</style>
+<div id="nexasplash">
+  <div class="nx-logo">NEXAGAZE</div>
+  <div class="nx-sub">AI-Powered Solutions</div>
+</div>
+  <div class="hero fade-in">
+    <h1>BrowserBot Checker</h1>
+    <p class="subtitle">PII Protection Suite — Local AI + Regex Masking</p>
+    <div class="badge-row">
+      <span class="badge">Credit Cards</span>
+      <span class="badge">SSN</span>
+      <span class="badge">Email</span>
+      <span class="badge">Phone</span>
+      <span class="badge">Regex AI</span>
+    </div>
+  </div>
+
+  <div class="features fade-in">
+    <div class="feature-card">
+      <div class="icon">🔍</div>
+      <h4>Regex Detection</h4>
+      <p>Pattern-based PII scanning</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🤖</div>
+      <h4>AI Verification</h4>
+      <p>Ollama-powered validation</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🛡️</div>
+      <h4>Instant Masking</h4>
+      <p>Real-time redaction</p>
+    </div>
+  </div>
+
+  <div class="container fade-in">
+    <h2>PII Masking Proxy</h2>
+    <p class="subtitle-text">Paste text containing sensitive data to mask it</p>
 
     <label for="inputText">Paste text containing PII:</label>
     <textarea id="inputText" placeholder="e.g. John Doe's email is john@example.com and his card is 4111-1111-1111-1111"></textarea>
@@ -64,10 +139,10 @@
     <div id="status" class="status">Local Ollama &bull; minimax-m2.1:cloud</div>
   </div>
 
-  <div style="text-align:center;padding:1rem;color:#475569;font-size:0.75rem;border-top:1px solid #1e293b;">
-    nexagaze project &mdash; built by Founder Bilal &bull;
-    <a href="mailto:ai@nexagaze.com" style="color:#64748b;">ai@nexagaze.com</a> &bull;
-    <a href="https://wa.me/9203103860653" style="color:#64748b;">03103860653</a>
+  <div class="footer">
+    Nexagaze &mdash; built by Founder Bilal &bull;
+    <a href="mailto:ai@nexagaze.com">ai@nexagaze.com</a> &bull;
+    <a href="https://wa.me/9203103860653">03103860653</a>
   </div>
 
   <script>
@@ -111,6 +186,11 @@
     demoPassBtn.addEventListener('click', () => { inputEl.value = 'Hey, just confirming our meeting at 3pm tomorrow. Let me know if that works. Thanks!'; outputEl.value = ''; summaryEl.textContent = 'Demo loaded — click Mask PII'; actionBadge.textContent = ''; actionBadge.className = 'action-badge'; });
     demoFailBtn.addEventListener('click', () => { inputEl.value = 'Hi, this is John Doe from Acme Corp. My email is john.doe@acme.com and my card number is 4111-1111-1111-1111. You can reach me at +1-555-123-4567.'; outputEl.value = ''; summaryEl.textContent = 'Demo loaded — click Mask PII'; actionBadge.textContent = ''; actionBadge.className = 'action-badge'; });
     inputEl.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') maskPII(); });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>
